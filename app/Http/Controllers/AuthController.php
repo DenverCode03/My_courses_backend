@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -56,16 +57,20 @@ class AuthController extends Controller
     }
 
     public function login(LoginRequest $request) {
+        Log::debug('debut');
         $request->validated();
+        Log::debug('fin');
 
-        
-
-        $user = User::where('email', $request->email)->first();
+        try {
+            $user = User::where('email', $request->email)->first();
+             
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => 'Indentifiants incorrects'
             ]);
+
+            // return response()->json()
         }
 // dd($user);
         $token = $user->createToken('the token');
@@ -80,5 +85,9 @@ class AuthController extends Controller
             'token' => $token->token,
             'expires_at' => $token->expires_at
         ]);
+    }catch(\Exception $e) {
+        Log::error($e->getMessage());
+        throw $e;
+    }
     }
 }
