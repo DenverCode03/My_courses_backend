@@ -33,6 +33,7 @@ class User extends Authenticatable
         'role',
         'profile',
         'password',
+        'verification_token',
     ];
 
     protected $casts = [

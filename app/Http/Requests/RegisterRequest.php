@@ -26,11 +26,11 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|regex:/^[a-zA-Z0-9]{3,100}$/',
+            'name' => 'required|regex:/^[a-zA-Z0-9 ]{3,100}$/',
             'surname' => 'required|regex:/^[a-zA-Z0-9]{3,100}$/',
             'email' => 'required|email|unique:users',
             'role' => ['required', Rule::enum(UserRole::class)],
-            'password' => 'required|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@^!%*?#&]).{8,}$/',
+            'password' => 'required|confirmed|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@^!%*?#&]).{8,}$/',
         ];
     }
 
@@ -47,6 +47,7 @@ class RegisterRequest extends FormRequest
             'email.email' => 'L\'email n\'est pas conforme',
             'email.unique' => 'L\'email doit etre unique',
             'password.required' => 'Le mot de passe est requis',
+            'password.confirmed' => 'Les mots de passe saisies ne correspondent pas ',
             'password.regex' => 'Le mot de passe doit avoir au moins une majuscule, un nombre et un caractere spéciale',
         ];
     }

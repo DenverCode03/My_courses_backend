@@ -41,6 +41,11 @@ class AuthenticateWithToken
         if (!$user) {
             return response()->json(['message' => 'Utilisateur introuvable'], 404);
         }
+        if ($user->email_verified_at == null) {
+            return response()->json([
+                'message' => 'Compte inactif : veillez verifier votre email pour activer votre compte'
+            ], 401);
+        }
         $request->merge(['user' => $user]);
 
         // dd($request->user);
